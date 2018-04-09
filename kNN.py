@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from numpy import *
 import operator
 
@@ -5,7 +6,8 @@ def creatDataSet():
 	group = array([[1.0,1.1],[1.0,1.0],[0,0],[0,0.1]])
 	labels = ['A','A','B','B']
 	return group,labels
-	
+
+# k-近邻算法
 def classify0(inX, dataSet, labels, k):
 	dataSetSize = dataSet.shape[0]
 	diffMat = tile(inX, (dataSetSize, 1)) - dataSet
@@ -20,6 +22,7 @@ def classify0(inX, dataSet, labels, k):
 	sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
 	return sortedClassCount[0][0]
 
+# 将文本记录转换为Numpy的解析程序
 def file2matrix(filename):
 	fr = open(filename)
 	arrayOLines = fr.readlines()
@@ -34,3 +37,14 @@ def file2matrix(filename):
 		classLabelVector.append(int(listFromLine[-1]))
 		index += 1
 	return returnMat,classLabelVector
+
+# 归一化特征值
+def autoNorm(dataSet):
+	minVals = dataSet.min(0)
+	maxVals = dataSet.max(0)
+	ranges = maxVals - minVals
+	normDataSet = zeros(shape(dataSet))
+	m = dataSet.shape[0]
+	normDataSet = dataSet - tile(minVals, (m,1))
+	normDataSet = normDataSet/tile(ranges, (m,1))
+	return normDataSet, ranges, minVals
